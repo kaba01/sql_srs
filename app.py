@@ -1,3 +1,4 @@
+import ast
 import streamlit as st
 import duckdb
 
@@ -24,21 +25,27 @@ with st.sidebar:
 st.header("Enter your code:")
 query = st.text_area(label="Votre code SQL ici", key="user_input")
 
-#if query:
-#    result = duckdb.sql(query).df()
-#    st.dataframe(result)
-#
-#tab2, tab3 = st.tabs(["Tables", "Solution"])
-#
-#with tab2:
-#    st.write("table: beverages")
-#    st.dataframe(beverages)
+if query:
+    result = con.execute(query).df()
+    st.dataframe(result)
+
+tab2, tab3 = st.tabs(["Tables", "Solution"])
+
+with tab2:
+    exercice_tables = ast.literal_eval(exercice.loc[0,"tables"])
+    for table in exercice_tables:
+        st.write(f"tables: {table}")
+        df_table = con.execute(f"SELECT * FROM {table}").df()
+        st.dataframe(df_table)
 #    st.write("table: food_items")
 #    st.dataframe(food_items)
 #    st.write("expected:")
 #    st.dataframe(solution)
 #
-#with tab3:
-#    st.write(answer)
+with tab3:
+    exercise_name = exercice.loc[0,"exercise_name"]
+    with open(f"answers/{exercise_name}.sql", "r") as f:
+        answer = f.read()
+    st.write(answer)
 
 
