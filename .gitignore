@@ -2,3 +2,4 @@
 *.csv
 test_db.py
 answers/sizes_and_trademarks.sql
+data/exercises_sql_tables.duckdb
