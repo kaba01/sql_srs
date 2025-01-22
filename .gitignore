@@ -1,3 +1,4 @@
 .idea/
 *.csv
 test_db.py
+answers/sizes_and_trademarks.sql
