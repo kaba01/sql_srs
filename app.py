@@ -55,7 +55,6 @@ with st.sidebar:
 
 st.header("Enter your code:")
 query = st.text_area(label="Votre code SQL ici", key="user_input")
-
 if query:
     result = con.execute(query).df()
     st.dataframe(result)
