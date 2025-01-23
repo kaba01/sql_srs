@@ -64,3 +64,6 @@ Levis
 
 trademarks = pd.read_csv(io.StringIO(trademarks))
 con.execute("CREATE OR REPLACE TABLE trademarks AS SELECT * FROM trademarks")
+
+con.close()
+
