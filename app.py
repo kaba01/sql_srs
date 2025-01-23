@@ -8,32 +8,6 @@ import streamlit as st
 # Connexion à la base de données DuckDB
 con = duckdb.connect(database="data/exercises_sql_tables.duckdb", read_only=False)
 
-# Définition des données en CSV
-CSV = """
-beverage,price
-orange juice,2.5
-Expresso,2
-Tea,3
-"""
-
-beverages = pd.read_csv(io.StringIO(CSV))
-
-CSV2 = """
-food_item,food_price
-cookie,2.5
-chocolate,2
-muffin,3
-"""
-
-food_items = pd.read_csv(io.StringIO(CSV2))
-
-# Requête SQL attendue
-ANSWER_STR = """
-SELECT * FROM beverages
-CROSS JOIN food_items
-"""
-
-solution_df = duckdb.sql(ANSWER_STR).df()
 
 with st.sidebar:
     theme = st.selectbox(
@@ -44,7 +18,7 @@ with st.sidebar:
     )
     st.write("You selected:", theme)
 
-    exercice = con.execute(f"SELECT * FROM memory_state WHERE theme = '{theme}'").df()
+    exercice = con.execute(f"SELECT * FROM memory_state WHERE theme = '{theme}'").df().sort_values("last_reviewed").reset_index()
     st.write(exercice)
 
     exercise_name = exercice.loc[0, "exercise_name"]
@@ -73,11 +47,11 @@ tab2, tab3 = st.tabs(["Tables", "Solution"])
 
 with tab2:
     # Extraction et affichage des tables en fonction de la base de données
-    exercice_tables = ast.literal_eval(exercice.loc[0, "tables"])
+    exercice_tables = exercice.loc[0, "tables"]
     for table in exercice_tables:
         st.write(f"tables: {table}")
         df_table = con.execute(f"SELECT * FROM {table}").df()
         st.dataframe(df_table)
 
 with tab3:
-    st.write(ANSWER_STR)
+    st.write(answer)
